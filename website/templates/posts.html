@@ -1,0 +1,29 @@
+{% extends "posts_div.html" %}
+
+{% block title %}
+    {% if username %}
+        Les Posts de {{ username }}
+    {% elif keyword %}
+        Les Posts avec "{{ keyword }}"
+    {% else %}
+        Tous les Posts
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    {% if username %}
+        Les Posts de {{ username }}
+    {% elif keyword %}
+        Les Posts avec "{{ keyword }}"
+    {% else %}
+        Tous les Posts
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <div align="center">
+        <a href="/home">
+            <button type="button" class="btn btn-primary btn-lg">Retour</button>
+        </a>
+    </div>
+{% endblock %}

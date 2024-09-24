@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <h1 align="center">{% block header %}Posts{% endblock %}</h1>
+  <style>
+    .card-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ajpost{
+        background-color: #4caf50;
+    }
+    .username-link {
+        text-decoration: none;
+    }
+
+    
+  </style>
+  <div id="posts">
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <a href="/posts/{{ post.user.username }}" class="username-link">
+                <img src="{{ url_for('static', filename='image/person-circle.svg') }}" class="user-icon" style="width: 24px; height: 24px;">
+                {{ post.user.username }}
+              </a>
+              {% if user.id == post.author %}
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                  Options
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/delete-post/{{ post.id }}" class="dropdown-item">Supprimer</a>
+                    <a href="{{ url_for('views.edit_post', post_id=post.id) }}" class="dropdown-item">Editer</a>
+                  </li>
+                </ul>
+              </div>
+              {% endif %}
+            </div>
+          <div class="card-body">
+            <div class="card-text">{{post.text}}</div>
+            <div class="collapse" id="comments-{{post.id}}">
+                <div class="card">
+                  <div class="card-body" id="comments-expanded-{{post.id}}">
+                    {% for comment in post.comments %}
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <a href="/posts/{{comment.user.username}}"
+                          >{{comment.user.username}}</a
+                        >: {{comment.text}}
+                      </div>
+                      <div>
+                        <small class="text-muted"> {{comment.date_created}}</small>
+                        {% if user.id == comment.author or user.id == post.author %}
+                        <div class="btn-group">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                          ></button>
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a
+                                href="/delete-comment/{{comment.id}}"
+                                class="dropdown-item"
+                                >Supprimer</a>
+                            </li>
+                          </ul>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <p class="card-text">
+                {% if post.comments|length > 0 %}
+                <a data-bs-toggle="collapse" href="#comments-{{post.id}}" role="button">
+                  <small>Afficher {{post.comments|length}} Commentaires</small>
+                </a>
+                {% else %}
+                <small class="text-muted">Aucun commentaire</small>
+                {% endif %}
+              </p>
+              <form
+                class="input-group mb-3"
+                method="POST"
+                action="/create-comment/{{post.id}}"
+              >
+                <input
+                  type="text"
+                  id="text"
+                  name="text"
+                  class="form-control"
+                  placeholder="taper votre commentaire"
+                />
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+          </div>
+          <div class="card-footer text-muted">{{post.date_created}}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div align="center">
+    <a href="/ajouter_post" class="btn btn-primary btn-lg fixed ajpost">Ajouter un Post</a>
+  </div>
+{% endblock %}

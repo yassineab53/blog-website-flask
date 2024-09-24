@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    
+    <title>{% block title %}{% endblock %}</title>
+
+</head>
+<style>
+
+  .btsearch{
+    background-color: #4caf50 ;
+    color: white;
+  }
+  body {
+        padding-top: 55px; 
+    }
+</style>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"> 
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav me-auto">
+                {% if user.is_authenticated %}
+                    <a class="nav-item nav-link" href="/home">Home</a>
+                    <a class="nav-item nav-link" href="/logout">Logout</a>
+                    <form method="GET" action="{{ url_for('views.posts_list') }}" class="d-flex">
+                      <div class="input-group">
+                          <input type="search" class="form-control rounded" placeholder="saisir mot-clé" aria-label="Search" aria-describedby="search-addon" name="q" />
+                          <button type="submit" class="btn btn-outline-primary btsearch">Search</button>
+                      </div>
+                  </form>
+                {% else %}
+                    <a class="nav-item nav-link" href="/login">Login</a>
+                    <a class="nav-item nav-link" href="/sign-up">Sign-up</a>
+                {% endif %}
+            </div>
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                
+                    <form action="{{ url_for('views.delete_profile', user_id=current_user.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Supprimer Profile
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+
+
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == "error" %}
+          <div class="alert alert-danger alter-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endif %}
+    
+        {% if category == "success" %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endif %}
+    
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="container">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</body>
+
+
+</html>

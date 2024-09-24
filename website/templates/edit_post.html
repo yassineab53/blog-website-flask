@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier le Post{% endblock %}
+
+{% block content %}
+<h1 align="center">Modifier le Post</h1>
+<form method="POST">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.text.label(class="form-label") }}
+        {{ form.text(class="form-control") }}
+    </div>
+    <br/>
+    <div align="center">
+        <button type="submit" class="btn btn-lg btn-primary">Modifier</button>
+    </div>
+</form>
+<br/>
+<div align="center"> 
+    <a href="/home">
+        <button type="button" class="btn btn-lg btn-primary">Retour</button>
+    </a>
+</div>
+
+{% endblock %}
